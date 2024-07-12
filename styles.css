@@ -1,0 +1,132 @@
+html, body, .frame, .top, .bottom, .display,
+.equation, .row, #equation, #vert-line, #answer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+    background-color: rgb(199, 199, 199);
+
+    height: 100%;
+    width: 100%;
+}
+
+.frame {
+    flex-direction: column;
+
+    height: 1000px;
+    width: 600px;
+
+    border-radius: 25px;
+
+    background-color: #050505;
+}
+
+.top {
+    flex-direction: column;
+
+    height: 400px;
+    width: 550px;
+
+    background-color: lightgrey;
+}
+
+.bottom {
+    flex-direction: column;
+    height: 550px;
+    width: 550px;
+
+
+    background-color: darkgrey;
+}
+
+.display {
+    flex-direction: column;
+    overflow: hidden;
+
+    height: 325px;
+    width: 500px;
+
+    border: 4px solid darkgrey;
+
+    background-color: #48b948;
+    border-radius: 25px;
+}
+
+.logo {
+    text-align: center;
+    
+    padding: 0;
+    margin: 0;
+    
+    font-weight: 800;
+    font-size: 20px;
+
+}
+
+.display .row, #equation, #equals, #answer {
+    display: flex;
+    align-items: center;
+    height: 65px;
+
+    color: white;
+    font-size: 25px;
+}
+
+
+.display .row {
+    width: 500px;    
+
+    flex-direction: row;
+
+    border-top-width: 2px;
+    border-top-style: solid;
+}
+
+#history {
+    border-top-color: #389138;
+}
+
+#input {
+    background-color: #389138;
+    border-top-color: #2e7e2e;
+}
+
+#equation {
+    width: 355px;
+    justify-content: start;
+    padding-left: 10px;
+}
+
+#answer {
+    width: 100px;
+    justify-content: end;
+    padding-right: 10px;
+}
+
+#equals {
+    width: 20px;
+    justify-content: center;
+}
+
+.bottom .row {
+    
+    height: 135px;
+    width: 540px;
+    gap: 4%;
+
+}
+
+.row button{
+    height: 90%;
+    width: 90%;
+    font-size: 25px;
+
+    border-radius: 10px;
+    border-style: solid;
+}
+
