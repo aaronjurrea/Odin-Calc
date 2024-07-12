@@ -32,6 +32,9 @@ html, body {
     height: 400px;
     width: 550px;
 
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+
     background-color: lightgrey;
 }
 
@@ -40,6 +43,8 @@ html, body {
     height: 550px;
     width: 550px;
 
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 
     background-color: darkgrey;
 }
