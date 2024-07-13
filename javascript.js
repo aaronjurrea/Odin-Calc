@@ -4,6 +4,7 @@ const INPUT = document.querySelector(".display .row#input");
 const SYMBOLS = ["+", "-", "*", "/", "%"];
 
 let singleClear = false;
+let inputLine = INPUT.querySelector("#equation");
 
 
 BUTTONS.forEach((button) => {
@@ -14,7 +15,7 @@ BUTTONS.forEach((button) => {
 
 
 function updateInputLine(){
-    INPUT.querySelector("#equation").textContent = '';
+    inputLine.textContent = '';
 }
 
 
@@ -93,7 +94,7 @@ function compute(operation, solution, value){
 
 
 function operate(){
-    let input = INPUT.querySelector("#equation").textContent.split('').reverse();
+    let input = inputLine.textContent.split('').reverse();
     let stack = [], solution = 0, 
         operation = '', lastChar = '', hasDecimal = false;
 
@@ -130,6 +131,13 @@ function operate(){
         else{
             if(char === '.')
                 hasDecimal = true;
+            else if(char === 'A'){
+                input.pop();
+                input.pop();
+
+                char = (HISTORY[3].querySelector("#answer").textContent === '' ? 0 : Number(HISTORY[3].querySelector("#answer").textContent))
+            }
+            // TODO - Fix bug where ANS comes last in an equation
             
             stack.push(char);
         }
@@ -151,7 +159,7 @@ function operate(){
 
 
 function clear(){
-    INPUT.querySelector('#equation').textContent = '';
+    inputLine.textContent = '';
 
     if(singleClear === true){
         for(let i = 0; i < HISTORY.length; i++){
@@ -165,33 +173,26 @@ function clear(){
 
 
 function backspace(){
-    let input = INPUT.querySelector("#equation").textContent;
-    input = input.slice(0, -1);
-    INPUT.querySelector("#equation").textContent = input;
+    inputLine.textContent = inputLine.textContent.slice(0, -1);
 }
 
 
 function appendInput(pressedButton){
-    if(INPUT.querySelector("#equation").textContent.length < 25)
-        INPUT.querySelector("#equation").textContent += pressedButton;
+    if(inputLine.textContent.length < 25){
+        if(inputLine.textContent.length === 0 && SYMBOLS.includes(pressedButton))
+            ans();
+        inputLine.textContent += pressedButton;
+    }
 }
 
 
-function add(num1, num2){
-    return num1 + num2;
-}
+function add(num1, num2){ return num1 + num2; }
 
 
-function subtract(num1, num2){
-    return num1 - num2;
-
-}
+function subtract(num1, num2){ return num1 - num2; }
 
 
-function multiply(num1, num2){
-    return num1 * num2;
-
-}
+function multiply(num1, num2){ return num1 * num2; }
 
 
 function divide(num1, num2){
@@ -203,29 +204,33 @@ function divide(num1, num2){
 }
 
 
-function modulo(num1, num2){
-    return num1 % num2;
-}
+function modulo(num1, num2){ return num1 % num2; }
+
 
 function press(pressedButton){
     switch(pressedButton){
         case 'AC':
             clear();
             singleClear = true;
-            break;
+            return;
         case '=':
             operate();
-            singleClear = false;
             break;
         case '⌫':
             backspace();
-            singleClear = false;
+            break;
+        case 'ANS':
+            ans();
             break;
         default:
             appendInput(pressedButton);
-            singleClear = false;
             break;
     }
+    singleClear = false;
+}
+
+function ans(){
+    appendInput("ANS");
 }
 
 

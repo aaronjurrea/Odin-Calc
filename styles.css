@@ -5,6 +5,7 @@ html, body, .frame, .top, .bottom, .display,
     align-items: center;
 }
 
+
 html, body {
     margin: 0;
     padding: 0;
@@ -14,6 +15,7 @@ html, body {
     height: 100%;
     width: 100%;
 }
+
 
 .frame {
     flex-direction: column;
@@ -25,6 +27,7 @@ html, body {
 
     background-color: #050505;
 }
+
 
 .top {
     flex-direction: column;
@@ -38,6 +41,7 @@ html, body {
     background-color: lightgrey;
 }
 
+
 .bottom {
     flex-direction: column;
     height: 550px;
@@ -48,6 +52,7 @@ html, body {
 
     background-color: darkgrey;
 }
+
 
 .display {
     flex-direction: column;
@@ -62,6 +67,7 @@ html, body {
     border-radius: 25px;
 }
 
+
 .logo {
     text-align: center;
     
@@ -72,6 +78,7 @@ html, body {
     font-size: 20px;
 
 }
+
 
 .display .row, #equation, #equals, #answer {
     display: flex;
@@ -92,14 +99,17 @@ html, body {
     border-top-style: solid;
 }
 
+
 #history {
     border-top-color: #389138;
 }
+
 
 #input {
     background-color: #389138;
     border-top-color: #2e7e2e;
 }
+
 
 #equation {
     width: 355px;
@@ -107,16 +117,19 @@ html, body {
     padding-left: 10px;
 }
 
+
 #answer {
     width: 100px;
     justify-content: end;
     padding-right: 10px;
 }
 
+
 #equals {
     width: 20px;
     justify-content: center;
 }
+
 
 .bottom .row {
     
@@ -124,6 +137,7 @@ html, body {
     width: 540px;
     gap: 5px;
 }
+
 
 .row button{
     flex-shrink: 0;
@@ -135,10 +149,12 @@ html, body {
     border-style: solid;
 }
 
+
 button#orange {
     background-color: orange;
     border-color: orange;
 }
+
 
 button#teal {
     background-color: teal;
