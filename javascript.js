@@ -1,6 +1,7 @@
 const BUTTONS = document.querySelectorAll("button");
 const HISTORY = document.querySelectorAll(".display .row#history");
 const INPUT = document.querySelector(".display .row#input");
+const SYMBOLS = ["+", "-", "*", "/"];
 
 let singleClear = false;
 
@@ -24,68 +25,77 @@ function updateHistory(row1, row2, ...args){
     else{
         row1.querySelector('#equals').textContent = row2.querySelector('#equals').textContent;
         row1.querySelector('#answer').textContent = row2.querySelector('#answer').textContent;
-
     }
-
-
 }
 
+
 function operate(){
-    let input = INPUT.querySelector("#equation").textContent.split('');
-    let parseStack = [];
+    let input = INPUT.querySelector("#equation").textContent.split('').reverse();
+    let stack = [], solution = 0, operation = '', lastOperator = false, hasInput = false;
 
-    let solution = 0;
+    while(input.length != 0){
+        let char = input.pop()
+        if(!hasInput && SYMBOLS.includes(char)){
+            error("Equation can not begin with operator!");
+            return;
+        }
+        else if(input.length === 0 && SYMBOLS.includes(char)){
+            error("Equation can not end with operator!");
+            return;
+        }
+        else if(lastOperator && SYMBOLS.includes(char)){
+            error("Equation can not have consecutive operators!");
+            return;                
+        }
+        else if(SYMBOLS.includes(char) || input.length === 0){
+            if(!SYMBOLS.includes(char))
+                stack.push(char)
 
-    // We will use a stack which we parse characters to, while popping from the current input stack
-    //  So we can respect order of operations
-    while(input.length > 0){
-        // This variable represents our current value (whether it's a symbol or a number)
-        let currChar = input.shift();
-        let currSymbol = '';
-        
-        if(currChar !== '+' && currChar !== '-' && currChar !== '*' && currChar !== '/')
-            parseStack.push(currChar);
+            if(operation !== ''){
+                let value = Number(stack.join(''));
+                switch(operation){
+                    case '+':
+                        solution = add(solution, value);
+                        break;
+                    case '-':
+                        solution = subtract(solution, value);
+                        break;    
+                    case '*':
+                        solution = multiply(solution, value);
+                        break;    
+                    case '/':
+                        solution = divide(solution, value);
+                        break;    
+                }
+            }
+            else{
+                solution = Number(stack.join(''));      
+            }
 
-        // If our current character is a symbol, we want to compare the previous character with next character
+            if(SYMBOLS.includes(char)){
+                operation = char;
+                lastOperator = true;
+            }
+
+            stack = [];
+        }
         else{
-            //  However, if the stack is empty or the last character is a symbol, we'll throw an error
-            if(parseStack.length === 0 || !typeof parseStack[parseStack.length-1] === 'number'){
-                error();
-                return;
-            }
-            // Here we see if there is already a current symbol, then we need to perform operations on the previous values before continuing
-            else if(currSymbol !== ''){
-                let var1 = 0, var2 = 0, tempArray = [];
-                while(typeof parseStack[parseStack.length-1] === 'number'){
-                    tempArray.push(parseStack.shift());
-                }
-                var1 = Number(parseStack.join(''));
-                parseStack.shift();
-                tempArray = [];
-
-                while(parseStack[parseStack.length-1] > 0){
-                    tempArray.push(parseStack.shift());
-                }
-                var2 = Number(parseStack.join(''));
-            }
-        
-
+            stack.push(char);
+            lastOperator = false;
         }
-
-        if(input.length === 0){
-            solution = Number(parseStack.join(''));
-        }
+        hasInput = true;
     }
 
-    for(let i = 1; i < HISTORY.length; i++){
-        updateHistory(HISTORY[i-1], HISTORY[i]);
-    }
 
-    updateHistory(HISTORY[HISTORY.length-1], INPUT, solution);
-    updateInputLine();
 
-    singleClear = false;
-    
+    if(hasInput = true){
+       for(let i = 1; i < HISTORY.length; i++)
+           updateHistory(HISTORY[i-1], HISTORY[i]);
+       
+       updateHistory(HISTORY[HISTORY.length-1], INPUT, solution);
+       updateInputLine();
+
+    }   
 
 }
 
@@ -109,20 +119,26 @@ function appendInput(pressedButton){
 }
 
 
-function add(...args){
+function add(num1, num2){
+    return num1 + num2;
+}
+
+function subtract(num1, num2){
+    return num1 - num2;
 
 }
 
-function subtract(...args){
+function multiply(num1, num2){
+    return num1 * num2;
 
 }
 
-function mutliply(...args){
-    
-}
-
-function divide(...args){
-
+function divide(num1, num2){
+    if(num2 === 0){
+        error("Can not divide by 0!");
+        return;
+    }
+    return num1 / num2;
 }
 
 
@@ -144,6 +160,7 @@ function press(pressedButton){
 }
 
 
-function error(){
-    alert("ERROR!");
+function error(message){
+    alert("ERROR: " + message);
+    updateInputLine();
 }
