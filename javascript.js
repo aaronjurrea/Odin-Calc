@@ -3,7 +3,6 @@ const HISTORY = document.querySelectorAll(".display .row#history");
 const INPUT = document.querySelector(".display .row#input");
 const SYMBOLS = ["+", "-", "*", "/", "%"];
 
-let singleClear = false;
 let inputLine = INPUT.querySelector("#equation");
 
 
@@ -59,10 +58,13 @@ function parseCheck(char, lastChar, input, hasDecimal){
         error("Equation can not have more than one decimal!");
         return false;    
     }
-    // TODO - FIX
     else if(SYMBOLS.includes(lastChar) && char === '.'){
         error("Decimals must be preceeded by an integer!");
         return false;            
+    }
+    else if(lastChar === 'ANS' && !SYMBOLS.includes(char)){
+        error("ANS must be followed by an operator!");
+        return false;              
     }
 
     return true;
@@ -95,7 +97,7 @@ function compute(operation, solution, value){
 
 function operate(){
     let input = inputLine.textContent.split('').reverse();
-    let stack = [], solution = 0, 
+    let stack = [], solution = '', 
         operation = '', lastChar = '', hasDecimal = false;
 
 
@@ -135,7 +137,12 @@ function operate(){
                 input.pop();
                 input.pop();
 
-                char = (HISTORY[3].querySelector("#answer").textContent === '' ? 0 : Number(HISTORY[3].querySelector("#answer").textContent))
+                char = (HISTORY[3].querySelector("#answer").textContent === '' ? 0 : Number(HISTORY[3].querySelector("#answer").textContent));
+
+                if(solution === '' && input.length === 0){
+                    solution = char;
+                }
+
             }
             // TODO - Fix bug where ANS comes last in an equation
             
@@ -159,28 +166,31 @@ function operate(){
 
 
 function clear(){
-    inputLine.textContent = '';
-
-    if(singleClear === true){
+    if(inputLine.textContent === ''){
         for(let i = 0; i < HISTORY.length; i++){
             HISTORY[i].querySelector('#equation').textContent = '';
             HISTORY[i].querySelector('#equals').textContent = '';
             HISTORY[i].querySelector('#answer').textContent = '';
         }
-    singleClear = false;
     }
+    inputLine.textContent = '';
 }
 
 
 function backspace(){
-    inputLine.textContent = inputLine.textContent.slice(0, -1);
+    if(inputLine.textContent[inputLine.textContent.length - 1] === 'S')
+        inputLine.textContent = inputLine.textContent.slice(0, -3);
+    else
+        inputLine.textContent = inputLine.textContent.slice(0, -1);
 }
 
 
 function appendInput(pressedButton){
     if(inputLine.textContent.length < 25){
         if(inputLine.textContent.length === 0 && SYMBOLS.includes(pressedButton))
-            ans();
+            appendInput('ANS');
+        else if(inputLine.textContent.length >= 22 && pressedButton === 'ANS')
+            return;
         inputLine.textContent += pressedButton;
     }
 }
@@ -219,18 +229,11 @@ function press(pressedButton){
         case '⌫':
             backspace();
             break;
-        case 'ANS':
-            ans();
-            break;
         default:
             appendInput(pressedButton);
             break;
     }
     singleClear = false;
-}
-
-function ans(){
-    appendInput("ANS");
 }
 
 
