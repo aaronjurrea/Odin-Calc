@@ -144,10 +144,8 @@ function operate(){
         char = input.pop();
     }
 
-    if(solution !== undefined){
-        solution = Math.round(solution * 1000)/1000;
+    if(solution !== undefined)
         updateHistory(solution);
-    }
 
     return solution;
 }
@@ -174,7 +172,7 @@ function parseCheck(){
         }
 
         if(char === 'A'){
-            if(!OPERATORS.includes(input.peek()))
+            if(input.peek() !== undefined && !OPERATORS.includes(input.peek()))
                 return error("ANS must be followed by an operator!");
         }
 
@@ -343,6 +341,7 @@ function backspace(){
         inputLine.textContent = inputLine.textContent.slice(0, -1);
 }
 
+
 /**
  * Appends the pressed button's text content to the input line with certain constraints.
  * Ensures the input line does not exceed 25 characters and manages specific rules for operators and the "ANS" keyword.
@@ -369,11 +368,12 @@ function updateInputLine(){
 
 
 /**
- * Updates the history display with the latest calculation.
+ * Updates the history display with the latest calculation result.
  * Shifts the content of each row in the HISTORY NodeList up by one position,
- * and inserts the current input line and solution into the last row.
+ * and inserts the current input line and the provided solution into the last row.
+ * Formats the solution to a readable format if it exceeds certain thresholds.
  * @param {*} solution - The solution to the current calculation, which will be displayed in the last history row.
- */
+*/
 function updateHistory(solution){
     for(let i = 1; i < HISTORY.length; i++){
         HISTORY[i-1].querySelector('#equation').textContent
@@ -384,6 +384,15 @@ function updateHistory(solution){
             = HISTORY[i].querySelector('#answer').textContent;
      }
 
+     solution = (solution < 1000000 ? 
+        solution : 
+        solution < 10000000000 ? 
+            Number.parseFloat(solution).toExponential(3) : 
+            Number.parseFloat(solution).toExponential(2))
+        .toString().replace("+", "");
+
+
+
     HISTORY[HISTORY.length-1].querySelector("#equation").textContent = inputLine.textContent;
     HISTORY[HISTORY.length-1].querySelector("#equals").textContent = '=';
     HISTORY[HISTORY.length-1].querySelector("#answer").textContent = solution.toString();
@@ -392,9 +401,17 @@ function updateHistory(solution){
 }
 
 
-
-
-
+/**
+ * Displays an error message in an alert box and clears the input line.
+ * This function is called when an error condition is met, showing the error message to the user and resetting the input.
+ * @param {string} message - The error message to be displayed.
+ * @returns {boolean} Always returns false.
+ */
+function error(message){
+    alert("ERROR: " + message);
+    updateInputLine();
+    return false;
+}
 
 
 
